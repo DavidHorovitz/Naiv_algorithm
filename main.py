@@ -1,4 +1,5 @@
 import pandas as pd
+from pprint import pprint
 
 
 df = pd.read_csv('buy_computer_data.csv')
@@ -35,25 +36,40 @@ dicty = {}
 #
 #     print(f"{counts}/{totaly}")
 
-def insert_data(age,income,student,credit_rating):
+def insert_data():
     global dicty
-    dicty["yes"]={age:{},income:{},student:{},credit_rating:{}}
-    dicty["no"]={age:{},income:{},student:{},credit_rating:{}}
+    dicty ={"yes":{},"no":{}}
+    feature_columns = [coloom for coloom in df.columns if coloom not in ['id', 'Buy_Computer']]
+
+    for choice in ["yes", "no"]:
+        for coloom in feature_columns:
+            # lst = df[value].unique().tolist()
+            dicty[choice][coloom]={}
+            for val in df[coloom].unique():
+                dicty[choice][coloom][val] = None
+    #     dicty["yes"]={age:{},income:{},student:{},credit_rating:{}}
+    # dicty["no"]={age:{},income:{},student:{},credit_rating:{}}
+
+
     return dicty
 
 
-def insert_How_many(coloom):
+def insert_How_many():
     global  dicty
+    feature_columns = [coloom for coloom in df.columns if coloom not in ['id', 'Buy_Computer']]
 
     for choice in ['yes','no']:
         condition1 = df[df["Buy_Computer"] == choice]
         total = len(condition1)
 
-        for value in df[coloom].unique():
-            both = condition1[condition1[coloom] == value]
-            count = len(both)
-            result = count / total
-            dicty["yes"][coloom][value] = result
+        for collom in feature_columns:
+            for value in df[collom].unique():
+                count = len(condition1[condition1[collom]==value])
+                count+=1
+                total+=df[collom].nunique()
+                result =count / total
+                result = round(result,3)
+                dicty[choice][collom][value] = result
     return dicty
     # both = condition1[condition1[coloom] == col]
     #
@@ -62,5 +78,6 @@ def insert_How_many(coloom):
     #
     # return sumy1 / sumy2
 
-insert_data("senior","low","yes","fair")
-insert_How_many("age")
+insert_data()
+insert_How_many()
+pprint(dicty)
