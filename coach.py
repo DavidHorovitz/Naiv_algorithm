@@ -49,4 +49,4 @@ def insert_How_many():
 
 insert_data()
 insert_How_many()
-pprint(dicty)
+# pprint(dicty)

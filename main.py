@@ -57,7 +57,7 @@ async def predict(
     prior_yes = total_yes / total
     prior_no = total_no / total
 
-    # מכפיל לפי חוק בייס
+
     score_yes *= prior_yes
     score_no *= prior_no
 

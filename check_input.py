@@ -48,4 +48,4 @@ class Check_input():
 
 
 a=Check_input()
-a.checker("youth medium no fair")
+# a.checker("youth medium no fair")
