@@ -21,7 +21,7 @@ import uvicorn
 # if __name__=="__main__":
 #     uvicorn.run(app,host="127.0.0.1",port=8000)
 
-import coach as co
+from app import coach as co
 from fastapi import FastAPI, Query
 
 app = FastAPI()

@@ -1,8 +1,5 @@
-from pprint import pprint
-import coach as co
+from app import coach as co
 import pandas as pd
-
-from coach import dicty
 
 
 class Tester:

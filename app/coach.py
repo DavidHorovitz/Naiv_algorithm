@@ -2,7 +2,7 @@ import pandas as pd
 from pprint import pprint
 
 
-df = pd.read_csv('buy_computer_data.csv')
+df = pd.read_csv('../data/buy_computer_data.csv')
 
 dicty = {}
 

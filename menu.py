@@ -1,8 +1,6 @@
-
-
-import coach as co
+from app import coach as co, check_input as ch
 from pprint import pprint
-import check_input as ch
+
 
 class Menu():
     # def __init__(self):

@@ -1,4 +1,5 @@
-import coach as co
+from app import coach as co
+
 
 class Check_input():
     def __init__(self):
