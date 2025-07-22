@@ -11,7 +11,7 @@ class Trainer():
 #
 # dicty = {}
 
-    def insert_data(self,clined_df):
+    def init_dicty_structure(self, clined_df):
         self.df = clined_df
         feature_columns = [col for col in self.df.columns if col not in ['id', 'Buy_Computer']]
         for choice in ["yes", "no"]:
@@ -21,7 +21,7 @@ class Trainer():
                     self.dicty[choice][column][val] = None
         return self.dicty
 
-    def insert_How_many(self):
+    def calculate_probabilities(self):
         if self.df is None:
             raise ValueError("No DataFrame provided. Call insert_data(df) first.")
 

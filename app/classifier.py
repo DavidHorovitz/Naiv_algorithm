@@ -2,24 +2,21 @@ from app import trainer as co
 
 
 class Check_input():
-    def __init__(self):
-        self.dicty = co.dicty
+    def __init__(self,dicty,df):
+        self.dicty = dicty
+        self.df = df
         self.user_dict={}
 
-    def checker(self, user_dict):
-        # four_parans= [col for col in co.df.columns if col not in ['id', 'Buy_Computer']]
-        # inp = user_didt.strip().split(" ")
-        expected_keys = [col for col in co.df.columns if col not in ['id', 'Buy_Computer']]
+    def checker(self, user_dict)-> dict:
+
+        expected_keys = [col for col in self.df.columns if col not in ['id', 'Buy_Computer']]
         if set(user_dict.keys()) != set(expected_keys):
             print(f" Error: dictionary must have exactly these keys: {expected_keys}")
-            return
+            return {
+                "error": True,
+                "message": f"Error: dictionary must have exactly these keys: {expected_keys}"
+            }
 
-        # if len(inp) != 4:
-        #     print("4 parameters! (age, income, student, credit_rating)")
-        #     return
-
-        # for i in range (len(four_parans)):
-        #     self.user_dict[four_parans[i]]=inp[i]
         self.user_dict = user_dict
         score_yes = 1.0
         score_no = 1.0
@@ -32,8 +29,8 @@ class Check_input():
             score_yes *= prob_yes
             score_no *= prob_no
 
-        total_yes = len(co.df[co.df["Buy_Computer"] == "yes"])
-        total_no = len(co.df[co.df["Buy_Computer"] == "no"])
+        total_yes = len(self.df[self.df["Buy_Computer"] == "yes"])
+        total_no = len(self.df[self.df["Buy_Computer"] == "no"])
         total_all = total_yes + total_no
 
         prior_yes = total_yes / total_all
@@ -42,16 +39,24 @@ class Check_input():
         score_yes *= prior_yes
         score_no *= prior_no
 
-        print("\nresult:")
-        print(f"score_yes = {round(score_yes,3)}")
-        print(f"score_no = {round(score_no,3)}")
-        if score_yes > score_no:
-            print("\nyeeeees")
-        else:
-            print("\nnooooo")
+        prediction = "yes" if score_yes > score_no else "no"
+
+        return {
+            "error": False,
+            "score_yes": round(score_yes, 6),
+            "score_no": round(score_no, 6),
+            "prediction": prediction
+        }
+        # print("\nresult:")
+        # print(f"score_yes = {round(score_yes,3)}")
+        # print(f"score_no = {round(score_no,3)}")
+        # if score_yes > score_no:
+        #     print("\nyeeeees")
+        # else:
+        #     print("\nnooooo")
 
 
-
-a=Check_input()
-
-a.checker({"age":"youth","income":"medium","student":"no","credit_rating":"fair"})
+#
+# a=Check_input()
+#
+# result =a.checker({"age":"youth","income":"medium","student":"no","credit_rating":"fair"})
