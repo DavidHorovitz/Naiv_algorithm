@@ -1,6 +1,8 @@
 import pandas as pd
 from pprint import pprint
 
+# class trainer():
+
 
 df = pd.read_csv('../data/buy_computer_data.csv')
 

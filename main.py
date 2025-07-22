@@ -21,7 +21,7 @@ import uvicorn
 # if __name__=="__main__":
 #     uvicorn.run(app,host="127.0.0.1",port=8000)
 
-from app import coach as co
+from app import trainer as co
 from fastapi import FastAPI, Query
 
 app = FastAPI()
@@ -102,6 +102,12 @@ async def condition(
         "P(value | yes)": round(prob_yes, 3),
         "P(value | no)": round(prob_no, 3)
     }
+# @main (/predictor)
+# def main(df):
+#     loaded_df = loader.load(df)
+#     cleaned_df = cleaner(loaded_df)
+
+
 
 if __name__=="__main__":
     uvicorn.run(app,host="127.0.0.1",port=8000)

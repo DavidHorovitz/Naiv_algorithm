@@ -1,4 +1,4 @@
-from app import coach as co, check_input as ch
+from app import trainer as co, classifier as ch
 from pprint import pprint
 
 

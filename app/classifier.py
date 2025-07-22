@@ -1,4 +1,4 @@
-from app import coach as co
+from app import trainer as co
 
 
 class Check_input():
@@ -6,17 +6,21 @@ class Check_input():
         self.dicty = co.dicty
         self.user_dict={}
 
-    def checker(self,user_input):
-        four_parans= [col for col in co.df.columns if col not in ['id', 'Buy_Computer']]
-        inp=user_input.strip().split(" ")
+    def checker(self, user_dict):
+        # four_parans= [col for col in co.df.columns if col not in ['id', 'Buy_Computer']]
+        # inp = user_didt.strip().split(" ")
+        expected_keys = [col for col in co.df.columns if col not in ['id', 'Buy_Computer']]
+        if set(user_dict.keys()) != set(expected_keys):
+            print(f" Error: dictionary must have exactly these keys: {expected_keys}")
+            return
 
         # if len(inp) != 4:
         #     print("4 parameters! (age, income, student, credit_rating)")
         #     return
 
-        for i in range (len(four_parans)):
-            self.user_dict[four_parans[i]]=inp[i]
-
+        # for i in range (len(four_parans)):
+        #     self.user_dict[four_parans[i]]=inp[i]
+        self.user_dict = user_dict
         score_yes = 1.0
         score_no = 1.0
 
@@ -49,4 +53,5 @@ class Check_input():
 
 
 a=Check_input()
-# a.checker("youth medium no fair")
+
+a.checker({"age":"youth","income":"medium","student":"no","credit_rating":"fair"})

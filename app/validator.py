@@ -1,8 +1,8 @@
-from app import coach as co
+from app import trainer as co
 import pandas as pd
 
 
-class Tester:
+class Validator:
     def __init__(self):
         self.big_table = None
         self.small_table = None
@@ -82,7 +82,7 @@ class Tester:
 
 
 
-tester=Tester()
+tester=Validator()
 # coach.transfer()
 # print(coach.list())
 
