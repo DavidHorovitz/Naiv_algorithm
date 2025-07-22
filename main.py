@@ -1,28 +1,13 @@
 import uvicorn
-# from fastapi import FastAPI
-#
-# app=FastAPI()
-#
-# @app.get("/")
-# async def root():
-#     return {"message":"Hello World"}
-# @app.get("/red")
-# async def red():
-#     return {"message" :"Hello red World"}
-#
-# @app.get("/{name}")
-# async def name(name):
-#     return {"message :Hello red World1":name}
-#
-# @app.get("/{age}")
-# async def age(age):
-#     return {"message :Hello red World2":name}
-#
-# if __name__=="__main__":
-#     uvicorn.run(app,host="127.0.0.1",port=8000)
+
 
 from app import trainer as co
 from fastapi import FastAPI, Query
+
+from app.cleaner import Cleaner
+from app.loader import Loader
+from app.trainer import Trainer
+from app.validator import Validator
 
 app = FastAPI()
 
@@ -103,11 +88,19 @@ async def condition(
         "P(value | no)": round(prob_no, 3)
     }
 # @main (/predictor)
-# def main(df):
-#     loaded_df = loader.load(df)
-#     cleaned_df = cleaner(loaded_df)
+def main(df):
+    loader = Loader()
+    df = loader.load(df)
 
+    cleaner = Cleaner()
+    cleaned_df = cleaner.cleaner(df)
 
+    trainer = Trainer()
+    trainer.insert_data(cleaned_df)
+    dicty = trainer.insert_How_many()
+
+    validator = Validator(dicty, df)
+    validator.test()
 
 if __name__=="__main__":
     uvicorn.run(app,host="127.0.0.1",port=8000)
