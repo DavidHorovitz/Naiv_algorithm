@@ -1,4 +1,5 @@
-from app import trainer as co, classifier as ch
+from client import classifier as ch
+from server import trainer as co
 from pprint import pprint
 
 

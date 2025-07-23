@@ -1,4 +1,3 @@
-from app import trainer as co
 import pandas as pd
 
 

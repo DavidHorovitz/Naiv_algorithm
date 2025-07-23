@@ -1,6 +1,3 @@
-from app import trainer as co
-
-
 class Check_input():
     def __init__(self,dicty,df):
         self.dicty = dicty

@@ -1,31 +1,13 @@
-from pprint import pprint
+from wsgiref.validate import validator
 
 import uvicorn
-
-from app import trainer as co
+from classifier import Check_input
+import requests
 from fastapi import FastAPI, Query
 
-from app.cleaner import Cleaner
-from app.loader import Loader
-from app.trainer import Trainer
-from app.validator import Validator
-
-def main():
-    global dicty, df
-
-    loader = Loader()
-    df = loader.load()
-
-    cleaner = Cleaner()
-    cleaned_df = cleaner.cleaner(df)
-
-    trainer = Trainer()
-    trainer.init_dicty_structure(cleaned_df)
-
-    dicty = trainer.calculate_probabilities()
-
-
 app = FastAPI()
+response = requests.get("http://dicty_container:8000/get_dicty")  # שם הקונטיינר הראשון ברשת דוקר
+dicty = response.json()
 
 @app.get("/predict")
 async def predict(
@@ -41,69 +23,66 @@ async def predict(
         "student": student,
         "credit_rating": credit_rating
     }
+    answer=Check_input(user_dict,dicty)
+    return answer.checker(user_dict)
 
-    score_yes = 1.0
-    score_no = 1.0
+    # score_yes = 1.0
+    # score_no = 1.0
+    #
+    # for feature in user_dict:
+    #     val = user_dict[feature]
+    #     prob_yes = dicty["yes"][feature].get(val, 1e-6)
+    #     prob_no = dicty["no"][feature].get(val, 1e-6)
+    #     score_yes *= prob_yes
+    #     score_no *= prob_no
+    #
+    # total_yes = len(df[df["Buy_Computer"] == "yes"])
+    # total_no = len(df[df["Buy_Computer"] == "no"])
+    # total = total_yes + total_no
+    # prior_yes = total_yes / total
+    # prior_no = total_no / total
+    #
+    #
+    # score_yes *= prior_yes
+    # score_no *= prior_no
+    #
+    # total_score=score_no+score_yes
+    # percent_yes = (score_yes / total_score) * 100
+    # percent_no = (score_no / total_score) * 100
+    #
+    # prediction = "yes" if score_yes > score_no else "no"
+    #
+    # return {
+    #     "prediction": prediction,
+    #     "score_yes": score_yes,
+    #     "score_no": score_no,
+    #     "percent_yes": round(percent_yes, 2),
+    #     "percent_no": round(percent_no, 2)
+    # }
 
-    for feature in user_dict:
-        val = user_dict[feature]
-        prob_yes = dicty["yes"][feature].get(val, 1e-6)
-        prob_no = dicty["no"][feature].get(val, 1e-6)
-        score_yes *= prob_yes
-        score_no *= prob_no
-
-    total_yes = len(df[df["Buy_Computer"] == "yes"])
-    total_no = len(df[df["Buy_Computer"] == "no"])
-    total = total_yes + total_no
-    prior_yes = total_yes / total
-    prior_no = total_no / total
-
-
-    score_yes *= prior_yes
-    score_no *= prior_no
-
-    total_score=score_no+score_yes
-    percent_yes = (score_yes / total_score) * 100
-    percent_no = (score_no / total_score) * 100
-
-    prediction = "yes" if score_yes > score_no else "no"
-
-    return {
-        "prediction": prediction,
-        "score_yes": score_yes,
-        "score_no": score_no,
-        "percent_yes": round(percent_yes, 2),
-        "percent_no": round(percent_no, 2)
-    }
-
-
-
-
-
-
-@app.get("/condition")
-async def condition(
-    feature: str = Query(...),
-    value: str = Query(...)
-
-):
-    # dicty = co.dicty
-
-    if feature not in dicty["yes"]:
-        return {"error": "Invalid feature name"}
-
-    prob_yes = dicty["yes"][feature].get(value, 0.0)
-    prob_no = dicty["no"][feature].get(value, 0.0)
-
-    result = "yes" if prob_yes > prob_no else "no"
-
-    return {
-        "feature": feature,
-        "value": value,
-        "result": result,
-        "P(value | yes)": round(prob_yes, 3),
-        "P(value | no)": round(prob_no, 3)
-    }
+# @app.get("/condition")
+# async def condition(
+#     feature: str = Query(...),
+#     value: str = Query(...)
+#
+# ):
+#     # dicty = co.dicty
+#
+#     if feature not in dicty["yes"]:
+#         return {"error": "Invalid feature name"}
+#
+#     prob_yes = dicty["yes"][feature].get(value, 0.0)
+#     prob_no = dicty["no"][feature].get(value, 0.0)
+#
+#     result = "yes" if prob_yes > prob_no else "no"
+#
+#     return {
+#         "feature": feature,
+#         "value": value,
+#         "result": result,
+#         "P(value | yes)": round(prob_yes, 3),
+#         "P(value | no)": round(prob_no, 3)
+#     }
 
 # @main (/predictor)
 
@@ -112,7 +91,7 @@ async def condition(
     # validator.test()
 
 if __name__=="__main__":
-    main()
+
     uvicorn.run(app,host="127.0.0.1",port=8000)
 
     # import uvicorn
