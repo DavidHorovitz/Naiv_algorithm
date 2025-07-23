@@ -1,21 +1,19 @@
-from pprint import pprint
-import coach as co
+from app import trainer as co
 import pandas as pd
 
-from coach import dicty
 
-
-class Tester:
-    def __init__(self):
+class Validator:
+    def __init__(self, dicty, df):
         self.big_table = None
         self.small_table = None
-        self.dicty = co.dicty
+        self.dicty = dicty  # **מקבלים dicty מהמעלה Trainer**
+        self.df = df
 
     def transfer(self):
         small_rows = []
         big_rows = []
 
-        for index,row, in co.df.iterrows():
+        for index,row, in self.df.iterrows():
             if index%3==0:
                 small_rows.append(row)
             else:
@@ -85,11 +83,11 @@ class Tester:
 
 
 
-tester=Tester()
+# tester=Validator()
 # coach.transfer()
 # print(coach.list())
 
-tester.test()
+# tester.test()
 
 
 
