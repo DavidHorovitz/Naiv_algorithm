@@ -1,6 +1,6 @@
-import pandas as pd
-from pprint import pprint
-from cleaner import Cleaner as cl
+# import pandas as pd
+# from pprint import pprint
+# from cleaner import Cleaner as cl
 
 class Trainer():
     def __init__(self):

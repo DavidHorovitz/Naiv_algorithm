@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import uvicorn
 
 from app import trainer as co
@@ -8,6 +10,21 @@ from app.loader import Loader
 from app.trainer import Trainer
 from app.validator import Validator
 
+def main():
+    global dicty, df
+
+    loader = Loader()
+    df = loader.load()
+
+    cleaner = Cleaner()
+    cleaned_df = cleaner.cleaner(df)
+
+    trainer = Trainer()
+    trainer.init_dicty_structure(cleaned_df)
+
+    dicty = trainer.calculate_probabilities()
+
+
 app = FastAPI()
 
 @app.get("/predict")
@@ -17,7 +34,7 @@ async def predict(
     student: str = Query(...),
     credit_rating: str = Query(...)
 ):
-    dicty = co.dicty
+    # dicty = co.dicty
     user_dict = {
         "age": age,
         "income": income,
@@ -35,8 +52,8 @@ async def predict(
         score_yes *= prob_yes
         score_no *= prob_no
 
-    total_yes = len(co.df[co.df["Buy_Computer"] == "yes"])
-    total_no = len(co.df[co.df["Buy_Computer"] == "no"])
+    total_yes = len(df[df["Buy_Computer"] == "yes"])
+    total_no = len(df[df["Buy_Computer"] == "no"])
     total = total_yes + total_no
     prior_yes = total_yes / total
     prior_no = total_no / total
@@ -53,11 +70,12 @@ async def predict(
 
     return {
         "prediction": prediction,
-        "score_yes": round(score_yes, 3),
-        "score_no": round(score_no, 3),
+        "score_yes": score_yes,
+        "score_no": score_no,
         "percent_yes": round(percent_yes, 2),
         "percent_no": round(percent_no, 2)
     }
+
 
 
 
@@ -69,7 +87,7 @@ async def condition(
     value: str = Query(...)
 
 ):
-    dicty = co.dicty
+    # dicty = co.dicty
 
     if feature not in dicty["yes"]:
         return {"error": "Invalid feature name"}
@@ -86,22 +104,15 @@ async def condition(
         "P(value | yes)": round(prob_yes, 3),
         "P(value | no)": round(prob_no, 3)
     }
+
 # @main (/predictor)
-def main(df):
-    loader = Loader()
-    df = loader.load(df)
 
-    cleaner = Cleaner()
-    cleaned_df = cleaner.cleaner(df)
 
-    trainer = Trainer()
-    trainer.init_dicty_structure(cleaned_df)
-    dicty = trainer.calculate_probabilities()
-
-    validator = Validator(dicty, df)
-    validator.test()
+    # validator = Validator(dicty, df)
+    # validator.test()
 
 if __name__=="__main__":
+    main()
     uvicorn.run(app,host="127.0.0.1",port=8000)
 
     # import uvicorn

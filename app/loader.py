@@ -1,8 +1,8 @@
 import pandas as pd
 
 class Loader:
-    def load(self,file):
-        df = pd.read_csv(file)
+    def load(self):
+        df = pd.read_csv("data/buy_computer_data.csv")
         return df
 
 # a=Loader()

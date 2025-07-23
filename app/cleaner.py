@@ -1,5 +1,5 @@
-from loader import Loader as lo
-import pandas as pd
+# from loader import Loader as lo
+# import pandas as pd
 class Cleaner:
     def cleaner(self,df):
         cleaned_df = df.dropna()
