@@ -1,13 +1,30 @@
 from wsgiref.validate import validator
-
+import time
 import uvicorn
 from classifier import Check_input
 import requests
 from fastapi import FastAPI, Query
 
 app = FastAPI()
-response = requests.get("http://dicty_container:8000/get_dicty")  # שם הקונטיינר הראשון ברשת דוקר
-dicty = response.json()
+# response = requests.get("http://dicty_container:8000/get_dicty")  # שם הקונטיינר הראשון ברשת דוקר
+# dicty = response.json()
+def wait_for_dicty(url, timeout=30):
+    for i in range(timeout):
+        try:
+            print(f"Trying to connect to {url}... Attempt {i+1}")
+            response = requests.get(url)
+            if response.status_code == 200:
+                print("Connected!")
+                return response.json()
+        except:
+            pass
+        time.sleep(1)
+    raise RuntimeError("Could not connect to dicty server")
+
+dicty = wait_for_dicty("http://dicty_container:8000/get_dicty")
+
+
+
 
 @app.get("/predict")
 async def predict(
@@ -92,7 +109,7 @@ async def predict(
 
 if __name__=="__main__":
 
-    uvicorn.run(app,host="127.0.0.1",port=8000)
+    uvicorn.run(app,host="0.0.0.0",port=8000)
 
     # import uvicorn
     # from fastapi import FastAPI, Query
