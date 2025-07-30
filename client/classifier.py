@@ -6,7 +6,8 @@ class Check_input():
 
     def checker(self, user_dict)-> dict:
 
-        expected_keys = [col for col in self.df.columns if col not in ['id', 'Buy_Computer']]
+        # expected_keys = [col for col in self.df.columns if col not in ['id', 'Buy_Computer']]
+        expected_keys = [key for key in self.dicty["yes"].keys()]
         if set(user_dict.keys()) != set(expected_keys):
             print(f" Error: dictionary must have exactly these keys: {expected_keys}")
             return {
